@@ -170,71 +170,74 @@ combined_df: integrated temperature+precipitation+ndvi dataset
 
 analysis_df: observations fulfilling the conditions of the required NDVI coverage and the climate data availability.
 
-- 분석데이터셋(analysis_df) 에 대해 아래조건을 만족하는 데이터들을 포함하고 있음.
 
-* 월별 ndvi 존재
-- `ndvi valid area >= 80%`
-* 월평균온도 존재
-* 월 누적강수량 존재
+- The analysis dataset (`analysis_df`) includes observations that meet the following conditions:
 
-> ndvi valid area ≥ 80%은 데이터처리가되는 코드상에서 설정가능한 데이터 품질 기준이며, 이 기준은 종전의 다양한 데이터셋에 대해 일률적으로 적용되지 않았음
+  - Monthly NDVI data are available.
+  - `ndvi valid area >= 80%`
+  - Monthly mean temperature data are available.
+  - Monthly cumulative precipitation data are available.
 
-### 6.3 백업 및 Excel 파일 추출
+> The NDVI valid area threshold of 80% is a configurable data quality criterion in the processing code. This threshold has not been applied uniformly across all previously generated datasets.
 
-google colab 코드에서 제공되는 코드상으로는 아래 in-memory copy들이 만들어짐
+### 6.3 Backup and Excel Export
 
-- combined_df_backup
-- analysis_df_backup
+The Google Colab code creates the following in-memory backup copies:
 
-생성되는 excel 파일명
+- `combined_df_backup`
+- `analysis_df_backup`
+
+Generated Excel file:
 
 - 홍천_기온_강수_NDVI_병합완료.xlsx
 
-**구성되어 있는 Excel 시트 2장:**
+**The Excel file contains two worksheets:**
 
-| sheet | source |
+| Sheet | Source |
 |---|---|
-| 전체자료 | combined_df |
-| 분석자료 | analysis_df |
+| 전체자료 | `combined_df` |
+| 분석자료 | `analysis_df` |
 
-excel 파일 추출은 pandas.excelWriter를 사용하였음. openpyxl Engine 사용.
+The Excel file is exported using `pandas.ExcelWriter` with the `openpyxl` engine.
 
-- frozen header 행 적용
-- auto filter 적용
-- column width 변경 등 적용
+The following formatting options are applied:
 
-<!-- 원문에 내용이 없는 미완성 항목: excel 파일 추출시 -->
+- Frozen header row
+- AutoFilter
+- Adjusted column widths
 
-## 7. 통계분석결과
+## 7. Statistical Analysis Results
 
-통계분석 결과는 아래 파일에서 정리됨
+The statistical analysis results are documented in the following file:
 
 - 202510124최재민 통계적분석 프로젝트1차 과제 (1)(2).xlsx
 
-* 연구배경 및 데이터소개
-* 단순통계량
-* 산점도
-* Pearson 상관계수
-* Joint 상대빈도분포표
-* 결과 해석 및 분석 방법론적 한계 설명
+The analysis includes:
 
-### 7.1 분석데이터
+- Research background and dataset description
+- Descriptive statistics
+- Scatter plots
+- Pearson correlation coefficients
+- Joint relative frequency distribution tables
+- Interpretation of results and discussion of methodological limitations
 
-50771 (정제자료 sheet) 데이터 대상으로 통계적분석을 수행한 것을 정리하였음.
+### 7.1 Analysis Dataset
 
-- ndvi가 존재하지 않은 데이터를 제외한 데이터셋(46048, ndvi valid area >= 80%) 데이터셋과 별개임.
+The statistical analysis was performed on 50,771 observations from the `정제자료` worksheet.
 
-### 7.2 Pearson 상관계수
+- This dataset is separate from the dataset containing 46,048 observations that meet the NDVI valid area threshold of 80%.
 
-| 상관변수 | Pearson 상관계수 r |
-|---|--:|
-| 월평균온도 ndvi | -0.1656 |
-| 월누적강수 ndvi | -0.2066 |
-| 월평균온도-강수 | +0.2313 |
+### 7.2 Pearson Correlation Coefficients
 
-### 7.3 월별 상관계수 변화
+| Variable Pair | Pearson Correlation Coefficient (r) |
+|---|---:|
+| Monthly Mean Temperature – NDVI | -0.1656 |
+| Monthly Cumulative Precipitation – NDVI | -0.2066 |
+| Monthly Mean Temperature – Precipitation | +0.2313 |
 
-- summer 기간동안 온도의 ndvi 상관성이 변화가 발생함.
+### 7.3 Monthly Changes in Correlation Coefficients
+
+- The correlation between temperature and NDVI varies across the summer months.
 
 | Month | Correlation of Temperature vs. NDVI (r) |
 |---|---:|
@@ -286,45 +289,46 @@ Note that the python modules used from the standard python library (e.g. json, t
 
 google.colab 모듈은 구글 Colab의 환경에서 제공됩니다.
 
-### 9.2 재현 순서
 
-- 구글 Colab에 필요한 파이썬 패키지 설치
-- 구글 Earth Engine과의 인증 및 적절한 GEE 프로젝트 초기화
-- hongcheon_split_1km.gpkg 를 GeoDataFrame(zones) 로 읽어옴
-- ERA5-Land의 기후 데이터 (DataFrame, weather_df) 준비
-- NDVI 수집 및 데이터 통합 실행 스크립트 실행
-- 최종 dataset을 excel로 저장하기 위한 실행 스크립트 (excel로 export)
+### 9.2 Reproduction Steps
 
-예시로 spatial 데이터셋을 읽어오는 부분은 아래와 같습니다.
+1. Install the required Python packages in Google Colab.
+2. Authenticate with Google Earth Engine and initialize the appropriate GEE project.
+3. Load `hongcheon_split_1km.gpkg` into a GeoDataFrame (`zones`).
+4. Prepare the ERA5-Land climate dataset as a DataFrame (`weather_df`).
+5. Run the scripts for NDVI data collection and data integration.
+6. Run the final export script to save the dataset as an Excel file.
 
-기후 DataFrame필드
+An example of loading the spatial dataset is provided below.
 
-- 반드시 있어야 하는 필드는 다음과 같습니다.
+**Climate DataFrame Fields**
 
-만약 검증된 마지막 기후 워크북이 있다면, 해당 워크시트를 pandas.read_excel() 로 로딩하실 수 있습니다.
+The following fields are required.
 
-다만 워크시트명, 변수명, 강수보정 여부를 확인 후 실행을 진행해야합니다.
+If a verified final climate workbook is available, the corresponding worksheet can be loaded using `pandas.read_excel()`.
 
-### 9.3 현재 재현성 제한점
+However, the worksheet name, variable names, and precipitation correction status should be checked before running the scripts.
 
-제공된 NDVI 처리 스크립트는 이미 zones, weather_df 가 초기화된 상태를 가정하고 있습니다.
+### 9.3 Current Reproducibility Limitations
 
-초기 forest analysis unit 생성 방법, ERA5-Land 기후 데이터 수집 및 보정하는 전체 절차는 NDVI 스크립트 상에서 제공되지 않고 있습니다.
+The provided NDVI processing script assumes that `zones` and `weather_df` have already been initialized.
 
-즉, 현재 상태에서 설명할 수 있는 부분은 output들 및 부분 실행 절차에 대한 설명 뿐입니다.
+The NDVI script does not include the complete procedures for constructing the initial forest analysis units or collecting and correcting ERA5-Land climate data.
 
-즉, **아직은 단 하나의 명령어로 모든 과정(end-to-end)의 재현성을 보장하지 못하는 상태입니다.** 
+Therefore, the current repository documents the generated outputs and partial execution procedures rather than a fully reproducible pipeline.
 
-## 10. 제한점 및 향후 계획
+**At this stage, the entire workflow cannot be reproduced end-to-end with a single command.**
 
-### 현재 제한점
+## 10. Limitations and Future Work
 
-- Geographical scope: 홍천군 (한국)
-- Temporal scope: 2017~2025년 중 6, 7, 8월 관측만 적용
-- Satellite observation quality: 구름 및 그늘 등 이미지 퀄리티에 따라 NDVI 관측 불가능 및 적절한 valid area 범위를 보장하지 못할 수 있음
-- Spatial resolution: Sentinel-2 와 ERA5-land가 상당히 다른 spatial resolution을 가지고 있어서, 
-- 여러 forest analysis zone이 동일한 ERA5-land grid cell의 기후 정보를 공유할 수 있음
-- Spatial / temporal dependency: 동일한 spatial zone의 반복 관측이나 인접 지역의 관측값이 항상 통계적으로 독립적이라고 볼 수 없음
+### Current Limitations
+
+- **Geographical Scope:** The analysis is limited to Hongcheon-gun, South Korea.
+- **Temporal Scope:** The analysis covers only June, July, and August from 2017 to 2025.
+- **Satellite Observation Quality:** Clouds, shadows, and other image quality issues may prevent valid NDVI observations or reduce the valid observation area below the required threshold.
+- **Spatial Resolution:** Sentinel-2 and ERA5-Land have substantially different spatial resolutions.
+- **Shared Climate Grid Cells:** Multiple forest analysis zones may share climate values from the same ERA5-Land grid cell.
+- **Spatial and Temporal Dependence:** Repeated observations from the same spatial zone and observations from neighboring zones cannot necessarily be treated as statistically independent.
 
 ### Forest Classification
 Spatial processing kept all the classification types as original. More filtering could be needed to extract only certain types of forest cover.
