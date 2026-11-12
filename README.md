@@ -287,7 +287,7 @@ For any script using a direct reading of spatial geometry from a GeoPackage (e.g
 
 Note that the python modules used from the standard python library (e.g. json, time, pathlib, hashlib, etc.) are not listed separately.
 
-google.colab 모듈은 구글 Colab의 환경에서 제공됩니다.
+The google.colab modules are provided by the Colab environment.
 
 
 ### 9.2 Reproduction Steps
