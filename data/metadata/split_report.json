@@ -1,1 +1,22 @@
-
+{
+  "source": "51720.shp",
+  "source_count": 76479,
+  "classification_filter": "none; all original classes retained",
+  "crs": "EPSG:5179",
+  "cell_size_m": 1000,
+  "grid_origin": "integer multiples of 1000 m",
+  "output_count": 2005,
+  "area_range_m2": [
+    9.102375335991383,
+    1000000.0000007153
+  ],
+  "output_area_m2": 1525798527.2130492,
+  "input_area_sum_m2": 1525798527.2233696,
+  "overlap_removed_m2": 0.010320425033569336,
+  "invalid_source_repaired": 0,
+  "empty_source_skipped": 0,
+  "duplicate_ids": 0,
+  "invalid_output": 0,
+  "gpkg": "hongcheon_split_1km.gpkg",
+  "project": "hongcheon_split_1km.qgz"
+}
