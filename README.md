@@ -239,3 +239,27 @@ zones = gpd.read_file(
 - 고도·수종·토양·누적 강수·시차 효과 등을 별도로 모형화하지 않았다.
 
 향후에는 **품질 기준별 민감도 분석**, **시차를 고려한 기후–NDVI 분석**, **시간순 평가를 이용한 식생 상태 예측**으로 확장할 수 있다. 이는 현재 완료한 작업이 아닌 후속 연구 계획이다.
+
+
+
+# Raw Forest Inventory Data
+
+## Data Source
+- Provider: Korea Forest Service
+- Dataset: Forest Type Map (1:5,000)
+- Region: Hongcheon-gun, Gangwon State, South Korea
+- Original file: 51720.shp
+- CRS: EPSG:5179
+- Original polygon count: 76,479
+
+## Data Availability
+The original dataset was obtained through the
+Korea Forest Service's spatial data distribution service.
+
+The original shapefile is not included in this repository
+because redistribution permission has not been verified.
+
+## Reproducibility
+The preprocessing results are documented in
+`data/metadata/split_report.json`.
+
