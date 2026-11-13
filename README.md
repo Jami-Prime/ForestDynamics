@@ -45,17 +45,6 @@ Three basic datasets are used.
 | Temperature & Precipitation | ECMWF ERA5-Land Daily Aggregated | extract climate variables |
 | Satellite Image | Sentinel-2 Surface Reflectance Harmonized | calculate NDVI |
 
-### Climate Data
-
-The climate data extracted monthly from ERA5-Land Daily Aggregated data are as follows.
-
-- **Temperature:** The mean 2 m air temperature (daily mean), which was averaged by month and converted into Celsius from Kelvin.
-- **Precipitation:** Daily precipitation and the total sum (monthly sum), converted into millimeters from meters.
-
-The climate data for 2 m temperature refer to the temperature of the air two meters above the ground. It does not mean a two-meter resolution.
-
-ERA5-Land climate data are climate reanalysis data and not actual observations from weather stations within the forest zones.
-
 ### Forest Spatial Data
 
 The original Forest Type Map was acquired from the spatial data distribution service of the Korea Forest Service.
