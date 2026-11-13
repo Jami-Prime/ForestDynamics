@@ -21,12 +21,19 @@ Spatiotemporal correlation analysis between climate (T, P) and NDVI (satellite) 
 | Unit of Observation | Zone (space) * Year * Month |
 | Total spatial zones | 2,005 |
 | Total Possible Observations | 54,135 |
-| Observations Included in Statistical Analysis | 50,771 |
-| Observations w/ 80% NDVI Coverage Criteria | 46,048 |
+| Observations in "원자료" | 46,048 |
+| Observations in "정제자료" | 50,771 |
 | Main tools | QGIS, Google Earth Engine, Python, Pandas, Excel |
 | Main Variables | Temperature, Precipitation, NDVI |
 
-※ Data Interpretation - 46,048 observations in 원자료, 50,771 observations in 정제자료. The names do not indicate simple filtering in or out. You need to check the dataset for statistical analysis and the dataset to which NDVI quality filtering has been applied.
+※ Data Interpretation -The Excel workbook contains two worksheets:
+
+- `원자료`: 46,048 observations
+- `정제자료`: 50,771 observations
+
+Note that the `정제자료` worksheet contains more observations than the `원자료` worksheet. Therefore, these two datasets should not be interpreted as the results of a simple filtering process.
+
+Please check the dataset structure and processing criteria before selecting a worksheet for statistical analysis.
 
 ## 3. Data Sources
 
