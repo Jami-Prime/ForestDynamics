@@ -128,15 +128,6 @@ During data processing, some cases of minor negative values for daily precipitat
 
 (Need to double-check the actual correction status of the intermediate climate dataset against the actual processing results.)
 
-### Climate Dataset Structure
-
-The intermediate Excel file `gee데이터.xlsx` contains:
-
-Is it clear whether this is before or after the last negative precipitation correction?
-
-This means that we cannot ensure an exact copy of the last corrected climate dataset just by reloading this Excel file.
-
-Therefore, just by reloading the Excel file, we cannot make sure that we have an exact replication of the last correction climate dataset.
 
 ## 6. Sentinel-2 NDVI Processing and Data Integration
 
