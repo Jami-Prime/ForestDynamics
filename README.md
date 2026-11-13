@@ -108,17 +108,17 @@ Daily precipitation sum per month.
 (precipitation unit m -> mm)
 
 ### Spatial Aggregation
-Since the spatial resolution of ERA5-Land doesn't necessarily align with the 1km forest analysis units, spatial aggregation was done based on overlap areas of raster cells and spatial zones.
-Instead of attributing a single raster cell value to the whole forest zone, spatial aggregation was done based on the ratio of overlapping raster cell.
+Since spatial resolution of ERA5-Land does not necessarily match the spatial resolution of 1km forest analysis units, we use spatial aggregation based on overlapping areas of raster cells and spatial zones.
+Instead of getting value for one raster cell for all forest zone we use spatial aggregation according to ratio of overlapping raster cell.
 
 ### Correction of Precipitation
 During data processing, some cases of minor negative values for daily precipitation were corrected to zero.
 (Need to double check the actual correction status of intermediate climate dataset with the actual processing results)
 
 ### Climate Dataset Structure
-Intermediate Excel file (gee데이터.xlsx) contains the following variables:
-
-is it clear whether this excel is before or after the last negative precipitation correction?
+Intermediate excel file gee데이터.xlsx contains:
+is it clear before or after last negative precip correction?
+it means that we cannot ensure exact copy of last correction climate dataset just by reloading this excel file
 
 therefore, just by reloading the excel file we cannot make sure to have an exact replication of the last correction climate dataset.
 
@@ -126,7 +126,7 @@ therefore, just by reloading the excel file we cannot make sure to have an exact
 
 ### 6.1 NDVI Computation in Google Earth Engine
 
-The following NDVI computation was performed based on Sentinel-2 Surface Reflectance Harmonized data.
+NDVI computation here is based on Sentinel-2 Surface Reflectance Harmonized data
 
 **NDVI computation configuration:**
 
@@ -148,27 +148,27 @@ The following NDVI computation was performed based on Sentinel-2 Surface Reflect
 
 **NDVI computation steps:**
 
-1. download Sentinel-2 surface reflectance images from Google Earth Engine
-2. extract spectral bands B4, B8 and perform NDVI computation
-3. apply mask of Scene Classification Layer (SCL) to keep only defined classes
-4. perform monthly mean NDVI per pixel computation
-5. perform count of valid observations computation
-6. perform reduceRegions() and compute area-weighted NDVI statistics per spatial analysis zone.
-7. perform computation of coverage for valid area, computation of observation quality statistics.
-8. cache results (spatial zones statistics in csv files)
-9. combine monthly NDVI statistics with climate variables on spatial zone_id, year, month.
+1. download of sentinel-2 surface reflectance images from Google Earth Engine
+2. extract spectral bands B4 B8 and calculate NDVI
+3. use mask Scene Classification Layer (SCL) to keep only defined classess
+4. calculate monthly mean NDVI per pixel
+5. calculate count of valid obs
+6. reduceRegions() and calculate statistics (area weighted) NDVI per spatial analysis zone
+7. calculate valid area coverage, calculate statistics of observation quality
+8. cache results (csv files with statistics for spatial zones)
+9. merge monthly stats NDVI with climate (variables) on spatial zone_id,year,month
 
-All raster computations are performed on Google Earth Engine server side. There is no download of full datasets of satellite images to perform raster computations on the local machine.
+All raster calculations are done server side in Google Earth Engine. No download of full satellite images datasets for local raster calculations.
 
-We keep non-valid-observation pixels with empty values, instead of setting values equal to zero.
+We keep empty values (non valid observation pixels) and do not replace them with zero.
 
 ### 6.2 Generated DataFrames
 
-ndvi_df: monthly NDVI statistics and observation quality statistics
+ndvi_df - monthly stats of NDVI, stats of quality of observation
 
-combined_df: integrated temperature+precipitation+ndvi dataset
+combined_df - integrated temperature+precip+ndvi dataset
 
-analysis_df: observations fulfilling the conditions of the required NDVI coverage and the climate data availability.
+analysis_df - observations which satisfy conditions of required ndvi coverage and availabilty of climate data
 
 
 - The analysis dataset (`analysis_df`) includes observations that meet the following conditions:
@@ -178,7 +178,7 @@ analysis_df: observations fulfilling the conditions of the required NDVI coverag
   - Monthly mean temperature data are available.
   - Monthly cumulative precipitation data are available.
 
-> The NDVI valid area threshold of 80% is a configurable data quality criterion in the processing code. This threshold has not been applied uniformly across all previously generated datasets.
+>  A data quality criteria that can be configured in the processing code is the NDVI valid area threshold of 80%. This threshold has not always been applied to all the datasets that have been created in the past.
 
 ### 6.3 Backup and Excel Export
 
@@ -214,18 +214,17 @@ The statistical analysis results are documented in the following file:
 
 The analysis includes:
 
-- Research background and dataset description
-- Descriptive statistics
-- Scatter plots
-- Pearson correlation coefficients
-- Joint relative frequency distribution tables
-- Interpretation of results and discussion of methodological limitations
+- research background + description of dataset
+- descriptive stats
+- scatter plots
+- Pearson's correlation coef
+- joint relative frequency dist. tables
+- interpret results, discussion of limitations of approach
 
 ### 7.1 Analysis Dataset
 
-The statistical analysis was performed on 50,771 observations from the `정제자료` worksheet.
-
-- This dataset is separate from the dataset containing 46,048 observations that meet the NDVI valid area threshold of 80%.
+- Statistical analysis was run over 50771 obs from worksheet "정제자료".
+- This is different dataset than the dataset with 46048 observations which satisfy threshold of valid area of NDVI 80%
 
 ### 7.2 Pearson Correlation Coefficients
 
@@ -237,7 +236,8 @@ The statistical analysis was performed on 50,771 observations from the `정제�
 
 ### 7.3 Monthly Changes in Correlation Coefficients
 
-- The correlation between temperature and NDVI varies across the summer months.
+- Correlation between temperature and NDVI differs for different months of summer.
+- As seen in the results. It is not correct to think that the value of correlation from all observations of summer months is more or less the same every month.
 
 | Month | Correlation of Temperature vs. NDVI (r) |
 |---|---:|
@@ -247,33 +247,34 @@ The statistical analysis was performed on 50,771 observations from the `정제�
 
 As can be seen from the results, it would be not correct to assume that the correlation value based on all summer observations is generally the same for each month.
 
-Note that the values found are not causal relations, nor can one say anything about forest mortality or expected vegetation decline based on these correlations.
+Keep in mind that those are not values of causal relations and nothing can be said about mortality of forests or expected veg decline from these correlations.
 
 ### 7.4 Joint Relative Frequency Distribution
 
-A three-variable joint relative frequency distribution for temperature, precipitation, and NDVI is created by segmenting these values into three intervals each.
+3 variable joint rel. freq. dist. for temperature, precipitation, ndvi is calculated by splitting these values to three intervals (each variable).
+So in total there is 27 different possible combinations of intervals for each of variables.
 
-Hence, there are 27 possible combinations of intervals of the variables.
+This is done to analyze distribution of veg, climate states in observed dataset.
 
 The purpose of this analysis is to investigate the distribution of vegetation and climate state in the observed dataset.
 
-The results naturally depend on the choice of intervals and should be seen as an exploratory statistical summary of the data.
+Naturally, this analysis depends on intervals choice. This is some explorative stat summary of data.
 
 ---
 
 ## 8. Proposed Repository Structure
 
-The following structure for the directory is suggested for the project's organization on GitHub.
+Suggested directory structure for GitHub project organization.
 
-The structure is a suggestion and does not necessarily mean that all files are available already, or the full pipeline is ready to run at the moment without further preparations.
+This is only suggested structure. It does not mean that not necessarily all files are there yet or full pipeline is ready to run right now without additional preparations..
 
 ### Notes for the Repository
 
-- QGIS project and its referenced GeoPackage should be in the same directory.
-- Do not forget to remove or at least rename personal absolute paths in the split_report.json before publication.
-- Personal filenames must be renamed as well. Also check the internal metadata of the files.
-- Take care about redistribution rights before publishing any original or derived forest spatial data.
-- The full repository does not need big raw satellite imagery datasets, since raster calculations can be done on GEE (remote).
+- QGIS project and corresponding GeoPackage should be in the same directory
+- Please remember to remove or at least change the personal abs path in split_report.json file before publication
+- Personal file name should be changed. also check file internal meta information
+- Please consider rights for redistribution before publishing original or derived forest spatial data
+- Big raw satellite data is not necessary in the whole repo. we can do raster calculation with GEE (remote)
 
 ---
 
@@ -283,68 +284,68 @@ The structure is a suggestion and does not necessarily mean that all files are a
 
 The following external python packages are used in the given scripts to process NDVI data and create excel files:
 
-For any script using a direct reading of spatial geometry from a GeoPackage (e.g., if any are provided in the repository), geopandas is needed too.
+You need geopandas too if there is script(s) which directly read spatial geometry data from GeoPackage (e.g. if you have something in the repo?)
 
-Note that the python modules used from the standard python library (e.g. json, time, pathlib, hashlib, etc.) are not listed separately.
+The python modules used from standard python lib (e.g. json, time, pathlib, hashlib, etc.) are not separately listed.
 
 The google.colab modules are provided by the Colab environment.
 
 
 ### 9.2 Reproduction Steps
 
-1. Install the required Python packages in Google Colab.
-2. Authenticate with Google Earth Engine and initialize the appropriate GEE project.
-3. Load `hongcheon_split_1km.gpkg` into a GeoDataFrame (`zones`).
-4. Prepare the ERA5-Land climate dataset as a DataFrame (`weather_df`).
-5. Run the scripts for NDVI data collection and data integration.
-6. Run the final export script to save the dataset as an Excel file.
+1. Install necessary python packages on Google Colab
+2. Google Earth Engine authorize and initialize with appropriate GEE project
+3. Load hongcheon_split_1km.gpkg to GeoDataFrame(zones)
+4. Make ERA5-Land climate Data(frame)(weather_df)
+5. Run scripts for NDVI data gathering and data integration.
+6. Run final data export script to save dataset as excel.
 
-An example of loading the spatial dataset is provided below.
+For example, spatial data loading is like below.
 
 **Climate DataFrame Fields**
 
 The following fields are required.
 
-If a verified final climate workbook is available, the corresponding worksheet can be loaded using `pandas.read_excel()`.
+If you have verified final climate workbook, you can load a worksheet with pandas.read_excel().
 
 However, the worksheet name, variable names, and precipitation correction status should be checked before running the scripts.
 
 ### 9.3 Current Reproducibility Limitations
 
-The provided NDVI processing script assumes that `zones` and `weather_df` have already been initialized.
+The provided NDVI processing script expects already initialized zones and weather_df.
 
-The NDVI script does not include the complete procedures for constructing the initial forest analysis units or collecting and correcting ERA5-Land climate data.
+The NDVI script does not contain full process of initial forest analysis unit construction and ERA5-land climate data gathering and data correction..
 
-Therefore, the current repository documents the generated outputs and partial execution procedures rather than a fully reproducible pipeline.
+In this sense, current repo contains generated results and partly process excecution procedure, not full reproducible procedure.
 
-**At this stage, the entire workflow cannot be reproduced end-to-end with a single command.**
+**At this stage, full end-to-end procedure is not reproducible with single command.**
 
 ## 10. Limitations and Future Work
 
 ### Current Limitations
 
-- **Geographical Scope:** The analysis is limited to Hongcheon-gun, South Korea.
-- **Temporal Scope:** The analysis covers only June, July, and August from 2017 to 2025.
-- **Satellite Observation Quality:** Clouds, shadows, and other image quality issues may prevent valid NDVI observations or reduce the valid observation area below the required threshold.
-- **Spatial Resolution:** Sentinel-2 and ERA5-Land have substantially different spatial resolutions.
-- **Shared Climate Grid Cells:** Multiple forest analysis zones may share climate values from the same ERA5-Land grid cell.
-- **Spatial and Temporal Dependence:** Repeated observations from the same spatial zone and observations from neighboring zones cannot necessarily be treated as statistically independent.
+- **Geographical Scope:** Geographical Analysis is confined to Hongcheon-gun of Korea
+- **Temporal Scope:** Temporal Analysis is restricted only to Jun-Jul-Aug period of 2017~2025.
+- **Satellite Observation Quality:** Quality of satellite observation (cloud/shadow/image-quality etc.) can sometimes affect the validity of ndvi observation or validity-area-coverage is too small to meet threshold.
+- **Spatial Resolution:** Large difference in spatial resolution between sentinel-2 & ERA5-Land.
+- **Shared Climate Grid Cells:** Common Climate Grid cell among forest analysis zone can affect where the climate value of ERA5-Land is common among multiple forest analysis zones.
+- **Spatial and Temporal Dependence:** Spatial or Temporal dependence is not necessarily the statistically independent for repeating observation on the same spatial zone, or zone adjacent to the spatial zone.
 
 ### Forest Classification
 Spatial processing kept all the classification types as original. More filtering could be needed to extract only certain types of forest cover.
 
 ### Variables Not Explicitly Modeled
-Elevation, species type in forest, soil condition, accumulated precipitations, time-lag effect from climate.
+All types of classification stayed as original upon applying the spatial processing. You may need additional filtering to pick only certain type of forest cover.
 
 ### Potential Future Work
-- Sensitivity analysis for different NDVI quality threshold
-- Time-lagged analysis for climate and vegetation relations
-- Incorporate more environmental variables
-- Spatial-temporal dependency analysis
-- Prediction model of vegetation conditions
-- Time ordered model validation to avoid temporal info leak
+- Sensitivity analysis of various ndvi quality threshold
+- Time-lagged analysis on climate/vegetation relations
+- Inclusion of additional environmental variables
+- Analysis on spatiotemporal dependency
+- Prediction model on vegetation condition
+- Time ordered model validation (avoiding temporal info leak)
 
-The above are potential future works, not the result of completed analysis.
+Above are potential future works and not the result of completed analysis.
 
 ## 11. Raw Forest Inventory Data
 
@@ -362,20 +363,20 @@ The above are potential future works, not the result of completed analysis.
 ### Data Availability
  The original data were downloaded from Korea Forest Service's spatial data sharing service.
 
-Note: The original shapefile is not placed here as we have not confirmed permission for re-distribution.
+Note: We've download the original data from spatial data sharing service of Korea Forest Service.
 
-You must also confirm the re-distribution for the derived spatial data set before publication.
+Be sure to verify the re-distribution on derived spatial data set as well before publishing.
 
 ### Reproducibility
  Results of preprocessing are recorded in data/metadata/split_report.json
- - Report includes spatial processing option, input/output feature count, geometry validation, area consistency etc.
+ - Report contains details of spatial processing option, feature count of input/output, geometry validation, area consistency, etc.
 
 ## 12. Project Status
 
 (Exploratory data analysis - need more validation and development)
 
-Project is currently describing spatial preprocessing, sat-ndvi processing, climate data processing, and initial statistical exploratory analysis.
+Project currently focuses on explanation of spatial pre-processing, sat-ndvi processing, climate data processing, and initial statistical exploratory analysis.
 
-Developments planned include increase of reproducibility and data-quality validity criteria. Further, develop the analysis towards more advanced spatiotemporal modeling.
+We plan to increase the re-producibility and validity criteria of data quality. Also, to further advance the analysis to more advanced spatiotemporal modeling.
 
-The repo was used to document a development process and undergraduate project with the goal of recording implemented methods, shortcomings and future upgrades.
+The repo was used to document the development process and undergraduate project with the purpose of keeping track of implemented methods, deficiencies and future upgrades.
